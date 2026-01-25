@@ -1,0 +1,46 @@
+name: productivity-dashboard
+services:
+- name: backend
+  github:
+    repo: mudit-mohit/AI-Powered-Worker-Productivity-Dashboard
+    branch: main
+    deploy_on_push: true
+  dockerfile_path: backend/Dockerfile
+  source_dir: backend
+  envs:
+  - key: FLASK_ENV
+    value: production
+  - key: FLASK_APP
+    value: app.py
+  http_port: 5000
+  health_check:
+    http_path: /health
+  http_routes:
+  - path: /api
+    preserve_path_prefix: true
+
+- name: frontend
+  github:
+    repo: mudit-mohit/AI-Powered-Worker-Productivity-Dashboard
+    branch: main
+    deploy_on_push: true
+  build_command: npm ci && npm run build
+  source_dir: frontend
+  dockerfile_path: frontend/Dockerfile
+  envs:
+  - key: REACT_APP_API_URL
+    value: https://${APP_DOMAIN}/api
+  http_port: 3000
+  http_routes:
+  - path: /
+    preserve_path_prefix: true
+
+static_sites:
+- source_dir: frontend/build
+  routes:
+  - path: /
+
+databases:
+- name: factory-data
+  engine: SQLITE
+  version: "3"

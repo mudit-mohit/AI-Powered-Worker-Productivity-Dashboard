@@ -109,6 +109,21 @@ Events are seeded automatically when the application first starts and no events 
 
 ## Setup
 
+### Docker Setup (Recommended)
+
+1. **Prerequisites**
+   - Docker & Docker Compose installed
+   - Port 3000 and 5000 available
+
+2. **Run with Docker Compose**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Access the Application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5000
+
 ### Backend
 
 1. Install dependencies:
@@ -132,6 +147,16 @@ The database will automatically:
 ### Frontend
 
 Simply open `frontend/index.html` in a web browser to view the dashboard.
+
+## Deployment
+
+For production deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
+
+**Supported Platforms:**
+- DigitalOcean App Platform (recommended)
+- DigitalOcean Droplets
+- DigitalOcean Kubernetes
+
 
 ## Quick Start Examples
 
