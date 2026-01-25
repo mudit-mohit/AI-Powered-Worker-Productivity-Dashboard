@@ -150,8 +150,6 @@ Simply open `frontend/index.html` in a web browser to view the dashboard.
 
 ## Deployment
 
-For **FREE** production deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
-
 **Recommended Free Platforms:**
 - **Render** ⭐ (750 free hours/month, easiest setup)
 - **Railway** ($5/month credit - essentially free)
