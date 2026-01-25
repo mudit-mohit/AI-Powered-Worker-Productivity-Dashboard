@@ -1,46 +1,50 @@
-# Multi-stage build for Heroku deployment
-FROM node:18-alpine as builder
+# Multi-stage build for production deployment
+FROM node:18-alpine as frontend-builder
 
-WORKDIR /app
+WORKDIR /app/frontend
 
-# Install dependencies and build frontend
+# Install dependencies
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
+
+# Copy frontend source
 COPY frontend/src ./src
 COPY frontend/public ./public
+
+# Build frontend
 RUN npm run build
 
-# Final stage - serve both frontend and backend
+# Backend stage
 FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install Node and serve globally
-RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
-RUN npm install -g serve
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Copy backend requirements and install Python dependencies
 COPY backend/requirements.txt ./backend/
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
-# Copy backend app
+# Copy backend application
 COPY backend/app.py ./backend/
 COPY backend/seed_sample_data.py ./backend/
 
 # Copy frontend build from builder stage
-COPY --from=builder /app/build ./frontend/build
+COPY --from=frontend-builder /app/frontend/build ./frontend/build
 
-# Create data directory
+# Create data directory for SQLite database
 RUN mkdir -p /app/data
 
-# Expose ports
-EXPOSE 5000 3000
+# Expose port (DigitalOcean uses PORT env variable)
+EXPOSE 5000
 
 # Set environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
-ENV REACT_APP_API_URL=/api
-ENV PORT=5000
+ENV PYTHONUNBUFFERED=1
 
-# Start both services
-CMD bash -c "cd backend && python app.py &" && serve -s frontend/build -l 3000
+# Serve both frontend and backend from Flask
+CMD cd backend && python app.py

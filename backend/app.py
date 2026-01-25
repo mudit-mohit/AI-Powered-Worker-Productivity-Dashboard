@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 import sqlite3
 import json
@@ -6,11 +6,33 @@ from datetime import datetime, timedelta
 import random
 import os
 
-app = Flask(__name__)
+# Serve frontend build files
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
 CORS(app)
 
 # Database initialization
 DATABASE = 'factory.db'
+
+# Serve index.html for React routing
+@app.route('/')
+def serve_index():
+    """Serve the frontend index.html"""
+    index_path = os.path.join(app.static_folder, 'index.html')
+    if os.path.exists(index_path):
+        return send_from_directory(app.static_folder, 'index.html')
+    return jsonify({'message': 'Frontend not built. Run npm run build in frontend directory.'}), 404
+
+@app.route('/<path:path>')
+def serve_static(path):
+    """Serve static files (CSS, JS, images, etc.)"""
+    file_path = os.path.join(app.static_folder, path)
+    if os.path.isfile(file_path):
+        return send_from_directory(app.static_folder, path)
+    # For any non-existent routes, serve index.html for React routing
+    index_path = os.path.join(app.static_folder, 'index.html')
+    if os.path.exists(index_path):
+        return send_from_directory(app.static_folder, 'index.html')
+    return jsonify({'error': 'Not found'}), 404
 
 def get_db():
     conn = sqlite3.connect(DATABASE)
