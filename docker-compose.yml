@@ -1,0 +1,40 @@
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: productivity-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+    volumes:
+      - ./backend/data:/app/data
+    networks:
+      - productivity-network
+    depends_on: []
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: productivity-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    networks:
+      - productivity-network
+    depends_on:
+      - backend
+
+networks:
+  productivity-network:
+    driver: bridge
+
+volumes:
+  backend-data:
+    driver: local

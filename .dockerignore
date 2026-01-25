@@ -1,0 +1,15 @@
+# Build context exclusions
+.git
+.gitignore
+node_modules
+npm-debug.log
+dist
+build
+.env
+.DS_Store
+*.pyc
+__pycache__
+.pytest_cache
+.venv
+venv
+factory.db

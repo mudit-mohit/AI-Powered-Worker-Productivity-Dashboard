@@ -1,0 +1,279 @@
+.workstations-section {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #667eea;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.section-header h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0;
+}
+
+.section-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.sort-select {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+.sort-select:hover,
+.sort-select:focus {
+  border-color: #667eea;
+  outline: none;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 5px;
+  background: #f0f0f0;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.toggle-btn {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.toggle-btn.active {
+  background: white;
+  color: #667eea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.station-card {
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 5px solid #e0e0e0;
+}
+
+.station-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  background: white;
+}
+
+.station-card.util-high {
+  border-left-color: #2ecc71;
+}
+
+.station-card.util-medium {
+  border-left-color: #f39c12;
+}
+
+.station-card.util-low {
+  border-left-color: #e74c3c;
+}
+
+.station-card.selected {
+  border-color: #667eea;
+  background: #e8f0ff;
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  flex: 1;
+}
+
+.utilization-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.utilization-badge.util-high {
+  background: #d4edda;
+  color: #155724;
+}
+
+.utilization-badge.util-medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.utilization-badge.util-low {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.card-body {
+  display: grid;
+  gap: 10px;
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.metric:last-child {
+  border-bottom: none;
+}
+
+.metric .label {
+  color: #666;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.metric .value {
+  color: #333;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.metric .value.highlight {
+  color: #667eea;
+  font-size: 15px;
+}
+
+.station-info {
+  padding: 10px 0;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.stations-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.stations-table thead {
+  background: #f8f9fa;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.stations-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stations-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.stations-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.stations-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.stations-table tbody tr.selected {
+  background: #e8f0ff;
+  border-left: 3px solid #667eea;
+}
+
+.station-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.production-cell {
+  font-weight: bold;
+  color: #667eea;
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .workstations-section {
+    padding: 20px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .sort-select {
+    width: 100%;
+  }
+
+  .stations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stations-table {
+    font-size: 12px;
+  }
+
+  .stations-table th,
+  .stations-table td {
+    padding: 8px;
+  }
+}
