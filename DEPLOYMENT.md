@@ -3,118 +3,141 @@
 ## Prerequisites
 - GitHub account (with the repository pushed)
 - DigitalOcean account
-- Docker images built and ready
+- Docker and dependencies properly configured
 
-## Deployment Options
+## Deployment (Recommended: DigitalOcean App Platform)
 
-### Option 1: Using DigitalOcean App Platform (Recommended)
+### Step 1: Connect GitHub Repository
+1. Go to [DigitalOcean Console](https://cloud.digitalocean.com)
+2. Click **Create** → **Apps**
+3. Select **GitHub** as the source
+4. Authorize DigitalOcean to access your GitHub repositories
+5. Choose `AI-Powered-Worker-Productivity-Dashboard` repository
+6. Select `main` branch
+7. Click **Next**
 
-1. **Go to DigitalOcean Console**
-   - Log in to [DigitalOcean](https://cloud.digitalocean.com)
-   - Click "Create" → "Apps"
+### Step 2: Configure App
+1. DigitalOcean will auto-detect the `Dockerfile` in the root
+2. Set the following environment variables:
+   - `FLASK_ENV`: `production`
+   - `FLASK_APP`: `app.py`
+   - `PYTHONUNBUFFERED`: `1`
 
-2. **Connect GitHub Repository**
-   - Select your GitHub account
-   - Choose `AI-Powered-Worker-Productivity-Dashboard` repository
-   - Branch: `main`
+3. Configure HTTP routes:
+   - Internal Port: **8080**
+   - Routes: `/` (all traffic)
 
-3. **Configure Services**
-   - DigitalOcean will auto-detect `app.yaml`
-   - Review the backend and frontend configurations
-   - Ensure environment variables are set correctly
+4. Click **Next**
 
-4. **Deploy**
-   - Click "Create Resources"
-   - Wait for deployment to complete (~5-10 minutes)
-   - Your app will be live at a `.ondigitalocean.app` domain
+### Step 3: Review & Deploy
+1. Review the configuration
+2. Enter an app name (e.g., `productivity-dashboard`)
+3. Click **Create Resources**
+4. Wait for deployment (~5-10 minutes)
+5. Your app will be live at `https://your-app-name.ondigitalocean.app`
 
-### Option 2: Using Docker on Droplets
+## Alternative: Using Docker on Droplets
 
-1. **Create a Droplet**
-   - OS: Ubuntu 22.04 (LTS)
-   - Size: Basic ($6/month recommended)
-   - Add Docker 1-Click app for easy setup
+### Step 1: Create a Droplet
+- OS: Ubuntu 22.04 (LTS)
+- Size: Basic ($6/month recommended)
+- Add Docker 1-Click app
 
-2. **Connect via SSH**
-   ```bash
-   ssh root@your-droplet-ip
-   ```
+### Step 2: SSH & Clone Repository
+```bash
+ssh root@your-droplet-ip
+git clone https://github.com/mudit-mohit/AI-Powered-Worker-Productivity-Dashboard.git
+cd AI-Powered-Worker-Productivity-Dashboard
+```
 
-3. **Clone Repository**
-   ```bash
-   git clone https://github.com/mudit-mohit/AI-Powered-Worker-Productivity-Dashboard.git
-   cd AI-Powered-Worker-Productivity-Dashboard
-   ```
+### Step 3: Build & Run
+```bash
+# Option 1: Using Docker Compose
+docker-compose up -d
 
-4. **Build and Run with Docker Compose**
-   ```bash
-   docker-compose up -d
-   ```
+# Option 2: Using Docker directly
+docker build -t productivity-dashboard .
+docker run -d -p 80:8080 productivity-dashboard
+```
 
-5. **Access Application**
-   - Backend: `http://your-droplet-ip:5000`
-   - Frontend: `http://your-droplet-ip:3000`
-
-6. **Setup Domain (Optional)**
-   - Add your domain in DigitalOcean DNS settings
-   - Point to your droplet's IP
-
-### Option 3: Using DigitalOcean Kubernetes
-
-1. **Create Kubernetes Cluster**
-   - DigitalOcean Dashboard → Kubernetes
-   - Create a new cluster (3 nodes recommended)
-
-2. **Deploy with Helm**
-   ```bash
-   helm install productivity-dashboard ./k8s
-   ```
+### Step 4: Access Application
+- Frontend & API: `http://your-droplet-ip`
+- If using custom domain, point DNS to droplet IP
 
 ## Environment Variables
 
-### Backend
+### Backend (Flask)
 - `FLASK_ENV`: `production`
 - `FLASK_APP`: `app.py`
-- `PORT`: (auto-detected by DigitalOcean)
+- `PORT`: `8080` (auto-detected)
+- `PYTHONUNBUFFERED`: `1`
 
-### Frontend
-- `REACT_APP_API_URL`: Backend API URL (e.g., `https://app-name.ondigitalocean.app/api`)
-- `NODE_ENV`: `production`
+## How the Application Works
+
+- **Single Docker Container**: Both frontend and backend run together
+- **Frontend Build**: React app is built during Docker build process
+- **Backend Serves Frontend**: Flask serves the built React app at `/`
+- **API Routes**: Backend API available at `/api/*`
+- **Port**: Single port (8080) for all traffic
 
 ## Database
 
-SQLite database is stored in `/app/data` directory. For production, consider:
-- Using PostgreSQL on DigitalOcean Managed Database
-- Mounting persistent volumes in Kubernetes
-- Regular backups
+- **Type**: SQLite (file-based: `factory.db`)
+- **Location**: Backend data directory
+- **Persistence**: Data persists in DigitalOcean's container storage
+- **Auto-initialization**: Database initializes on first run
+- **Sample Data**: Auto-seeded with 7 days of sample events
 
 ## Monitoring & Logs
 
 ### App Platform
-- View logs in DigitalOcean Console
-- Monitor metrics and resource usage
-- Set up alerts for uptime
+- View logs in DigitalOcean Console under "Logs" tab
+- Monitor resource usage in "Metrics" tab
+- Set up alerts for uptime monitoring
 
 ### Droplets
-- SSH into droplet: `ssh root@your-droplet-ip`
-- View logs: `docker logs productivity-backend` or `docker logs productivity-frontend`
-- Monitor: `docker stats`
+```bash
+# View logs
+docker logs <container-name>
+
+# Monitor stats
+docker stats
+
+# SSH into droplet
+ssh root@your-droplet-ip
+```
 
 ## Scaling
 
-- **App Platform**: Auto-scales based on demand
-- **Droplets**: Scale manually by resizing or adding more droplets
-- **Kubernetes**: Auto-scaling configured in cluster
+- **App Platform**: Auto-scales based on traffic
+- **Droplets**: Manually resize or add load balancing
 
 ## Cost Estimation
 
 - **App Platform**: $12/month (shared resources)
-- **Droplet**: $6-24/month (depending on size)
-- **Managed Database (optional)**: $15+/month
-- **Bandwidth**: Usually included
+- **Droplet ($6/month)**: Basic shared CPU
+- **Droplet ($12/month)**: Better performance
+
+## Troubleshooting
+
+### Build Fails
+- Check if `package.json` is in the `frontend` directory
+- Verify `requirements.txt` is in the `backend` directory
+- Ensure `Dockerfile` is in the repository root
+
+### Application Won't Start
+- Check logs for errors
+- Verify environment variables are set
+- Ensure database directory is writable
+
+### API Not Responding
+- Check if backend is running: `curl http://app-url/health`
+- Verify database is initialized
+- Check logs for connection errors
 
 ## Support & Documentation
 
 - [DigitalOcean App Platform Docs](https://docs.digitalocean.com/products/app-platform/)
 - [Docker on DigitalOcean](https://docs.digitalocean.com/products/droplets/)
-- [Kubernetes on DigitalOcean](https://docs.digitalocean.com/products/kubernetes/)
+- [GitHub Integration](https://docs.digitalocean.com/products/app-platform/how-to/connect-github-repo/)
+

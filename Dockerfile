@@ -39,12 +39,13 @@ COPY --from=frontend-builder /app/frontend/build ./frontend/build
 RUN mkdir -p /app/data
 
 # Expose port (DigitalOcean uses PORT env variable)
-EXPOSE 5000
+EXPOSE 8080
 
 # Set environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
+ENV PORT=8080
 
 # Serve both frontend and backend from Flask
 CMD cd backend && python app.py
