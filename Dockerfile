@@ -4,8 +4,8 @@ FROM node:18-alpine as frontend-builder
 WORKDIR /app/frontend
 
 # Install dependencies
-COPY frontend/package.json frontend/package-lock.json ./
-RUN npm ci
+COPY frontend/package.json ./
+RUN npm install
 
 # Copy frontend source
 COPY frontend/src ./src
@@ -38,7 +38,7 @@ COPY --from=frontend-builder /app/frontend/build ./frontend/build
 # Create data directory for SQLite database
 RUN mkdir -p /app/data
 
-# Expose port (DigitalOcean uses PORT env variable)
+# Expose port (Render uses PORT env variable)
 EXPOSE 8080
 
 # Set environment variables
