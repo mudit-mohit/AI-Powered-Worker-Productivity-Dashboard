@@ -5,6 +5,8 @@ import WorkersSection from './components/WorkersSection';
 import WorkstationsSection from './components/WorkstationsSection';
 import DateRangeFilter from './components/DateRangeFilter';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function App() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,7 +40,7 @@ function App() {
         date_to: dateRange.to
       });
       
-      const response = await fetch(`http://localhost:5000/api/dashboard?${params}`);
+      const response = await fetch(`${API_BASE_URL}/api/dashboard?${params}`);
       if (!response.ok) throw new Error('Failed to fetch dashboard data');
       
       const data = await response.json();
@@ -70,7 +72,7 @@ function App() {
         <div className="error-box">
           <h2>⚠️ Connection Error</h2>
           <p>{error}</p>
-          <p>Make sure the backend server is running on http://localhost:5000</p>
+          <p>Make sure the backend server is running</p>
           <button onClick={fetchDashboard} className="retry-btn">Retry</button>
         </div>
       </div>
