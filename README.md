@@ -150,12 +150,13 @@ Simply open `frontend/index.html` in a web browser to view the dashboard.
 
 ## Deployment
 
-For production deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
+For **FREE** production deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
-**Supported Platforms:**
-- DigitalOcean App Platform (recommended)
-- DigitalOcean Droplets
-- DigitalOcean Kubernetes
+**Recommended Free Platforms:**
+- **Render** ⭐ (750 free hours/month, easiest setup)
+- **Railway** ($5/month credit - essentially free)
+- **Oracle Cloud** (Always free tier, no expiration)
+- **Fly.io** (3 free VMs)
 
 
 ## Quick Start Examples
