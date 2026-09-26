@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './WorkstationsSection.css';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
-function WorkstationsSection({ selectedStation, onSelectStation }) {
+function WorkstationsSection({ dateRange, selectedStation, onSelectStation }) {
   const [workstations, setWorkstations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('cards');
@@ -11,12 +11,16 @@ function WorkstationsSection({ selectedStation, onSelectStation }) {
 
   useEffect(() => {
     fetchWorkstationMetrics();
-  }, []);
+  }, [dateRange]);
 
   const fetchWorkstationMetrics = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/api/metrics/workstations/all`);
+      const params = new URLSearchParams({
+        date_from: dateRange.from,
+        date_to: dateRange.to
+      });
+      const response = await fetch(`${API_BASE_URL}/api/metrics/workstations/all?${params}`);
       if (!response.ok) throw new Error('Failed to fetch workstation metrics');
       
       const data = await response.json();

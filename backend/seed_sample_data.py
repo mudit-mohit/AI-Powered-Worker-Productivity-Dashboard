@@ -16,14 +16,16 @@ def seed_events():
     cursor.execute('DELETE FROM events')
     
     event_types = ['working', 'idle', 'absent', 'product_count']
-    base_date = datetime.now() - timedelta(days=7)
-    
+    # Anchor to midnight so hour offsets land inside the 8 AM - 6 PM shift
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    base_date = today - timedelta(days=7)
+
     for day_offset in range(7):
         for worker_id in range(1, 7):
             # Create realistic events throughout the day
             for event_num in range(random.randint(8, 15)):
                 # Random time between 8 AM and 6 PM
-                hour = random.randint(8, 18)
+                hour = random.randint(8, 17)
                 minute = random.randint(0, 59)
                 
                 event_date = base_date + timedelta(days=day_offset, hours=hour, minutes=minute)

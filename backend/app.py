@@ -489,8 +489,10 @@ def seed_sample_events(cursor, days=7):
     event_type_distribution = ['working', 'working', 'working', 'working', 'working', 'working',
                                'product_count', 'product_count', 'idle', 'idle', 'idle', 'absent']
     
-    base_date = datetime.now() - timedelta(days=days)
-    
+    # Anchor to midnight so hour offsets land inside the 8 AM - 6 PM shift
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    base_date = today - timedelta(days=days)
+
     for day_offset in range(days):
         for worker_id in range(1, 7):
             # Create 8-12 events per worker per day
@@ -565,13 +567,14 @@ def create_event():
         
         # Insert event
         cursor.execute('''
-            INSERT INTO events (worker_id, station_id, event_type, timestamp, confidence, count)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO events (worker_id, station_id, event_type, timestamp, duration, confidence, count)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (
             worker_id,
             station_id,
             data['event_type'],
             data['timestamp'],
+            data.get('duration'),
             data['confidence'],
             data.get('count')
         ))

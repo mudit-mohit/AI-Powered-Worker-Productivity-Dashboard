@@ -5,7 +5,8 @@ import WorkersSection from './components/WorkersSection';
 import WorkstationsSection from './components/WorkstationsSection';
 import DateRangeFilter from './components/DateRangeFilter';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// Empty default = same-origin requests (Flask serves the build; CRA dev server proxies /api)
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 function App() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -110,7 +111,7 @@ function App() {
               />
               
               <WorkstationsSection 
-                workstations={dashboardData.factory?.workstations}
+                dateRange={dateRange}
                 selectedStation={selectedStation}
                 onSelectStation={handleStationSelect}
               />
