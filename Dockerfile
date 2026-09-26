@@ -38,7 +38,7 @@ COPY --from=frontend-builder /app/frontend/build ./frontend/build
 # Create data directory for SQLite database
 RUN mkdir -p /app/data
 
-# Expose port (Render uses PORT env variable)
+# Expose port
 EXPOSE 8080
 
 # Set environment variables
